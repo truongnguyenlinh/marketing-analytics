@@ -84,6 +84,5 @@ def main():
     df = monte_carlo(df)
 
 
-
 if __name__ == "__main__":
     main()
