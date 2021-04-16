@@ -69,19 +69,21 @@ def monte_carlo(data):
     df = pd.DataFrame(columns=["MntWineSpent"])
 
     plt.hist(wine_spent, bins='auto')
-    # plt.show()
+    plt.show()
     for i in range(num_simulations):
         dictionary = {"MntWineSpent": round(wine_spent[i], 2)}
         df = df.append(dictionary, ignore_index=True)
 
     data = pd.concat([data, df], axis=1, join="inner")
-    return data
+    print("=========Monte Carlo Simulation=========")
+    print(data.head(10))
+    print("========================================")
 
 
 def main():
     df = pd.read_csv("marketing_data.csv", sep=",")
     df = prepare_df(df)
-    df = monte_carlo(df)
+    monte_carlo(df)
 
 
 if __name__ == "__main__":
