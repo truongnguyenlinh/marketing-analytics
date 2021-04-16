@@ -2,6 +2,7 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
+from scipy.stats import norm
 import warnings
 warnings.filterwarnings('ignore')
 pd.set_option("display.max_columns", None)
@@ -49,9 +50,39 @@ def prepare_df(data):
     return data
 
 
+def monte_carlo(data):
+    # Number of simulations will equal length of dataset (number of rows)
+    num_simulations = len(data)
+
+    def generate_random_numbers(mean, sd):
+        random_nums = norm.rvs(loc=mean,
+                               scale=sd,
+                               size=num_simulations)
+        return random_nums
+
+    # Target variable is MntWines, obtaining median and sd
+    mnt_wines_expected = data[['MntWines']].mean()
+    mnt_wines_sd = data[['MntWines']].std()
+
+    wine_spent = generate_random_numbers(mnt_wines_expected, mnt_wines_sd)
+
+    df = pd.DataFrame(columns=["MntWineSpent"])
+
+    plt.hist(wine_spent, bins='auto')
+    # plt.show()
+    for i in range(num_simulations):
+        dictionary = {"MntWineSpent": round(wine_spent[i], 2)}
+        df = df.append(dictionary, ignore_index=True)
+
+    data = pd.concat([data, df], axis=1, join="inner")
+    return data
+
+
 def main():
     df = pd.read_csv("marketing_data.csv", sep=",")
     df = prepare_df(df)
+    df = monte_carlo(df)
+
 
 
 if __name__ == "__main__":
