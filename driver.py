@@ -79,18 +79,16 @@ def ab_test(df):
     print(numSamplesNeeded)
 
     from scipy import stats
-    old_menu_sales = [101, 110, 115, 136, 140, 108,
-                      80, 89, 131, 98, 121, 117, 106,
-                      141, 119, 153, 184, 127, 103,
-                      139, 130, 146, 130]
+    old_menu_list = []
+    new_menu_list = []
+    old_menu_sales = [list(df_first.sample(n=6))]
+    for i in (old_menu_sales[0]):
+        old_menu_list.append(i)
+    new_menu_sales = [df_third.sample(n=6).tolist()]
+    for i in new_menu_sales[0]:
+        new_menu_list.append(i)
 
-    new_menu_sales = [158, 145, 134, 130, 113, 135,
-                      163, 128, 166, 154, 143, 147, 132,
-                      132, 136, 99, 163, 106, 143, 168, 136,
-                      123, 159]
-
-    testResult = stats.ttest_ind(new_menu_sales,
-                                 old_menu_sales, equal_var=False)
+    testResult = stats.ttest_ind(new_menu_list, old_menu_list, equal_var=False)
 
     import numpy as np
     print("Hypothesis test p-value: " + str(testResult))
